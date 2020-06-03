@@ -20,8 +20,6 @@ function handleClick(e) {
   /* 
     getDataを呼び出して、mainEl.innerHTMLを利用して、結果を出力します。
   */
-  const featchedData = getData();
-  mainEl.innerHTML = featchedData;
 }
 
 function getData() {
@@ -29,37 +27,33 @@ function getData() {
     fetchDataを呼び出して、戻ってきたデータのsuccessの値を元にresolveで物件データまたは、rejectでエラーメッセージを返す。
   */
   fetchData()
-    .then(function () {
-      console.log({ success: true, propertyData: propertyData });
+    .then(function (result) {
+      if (result.success === true) {
+        return result.propertyData;
+      }
     })
-    .catch(
-      console.log({
-        success: false,
-        message: 'データの取得に失敗しました。',
-      })
-    );
+
+    .catch(function (err) {
+      if (err.success === false) {
+        return err.message;
+      }
+    });
 }
 
 function fetchData() {
-  /* 
-    lodashのrandom()を使って、80%の確率で正しいデータを返し、20%の確率でエラーを返すようにしましょう。
-    またsetTimeoutを利用して、1秒待ってから結果を得るようにします。
-  */
   const chances = _.random(1, 10);
 
   return new Promise(function (resolve, reject) {
     if (chances < 9) {
       setTimeout(() => {
-        resolve();
+        resolve({ success: true, propertyData: propertyData });
       }, 1000);
     } else {
       setTimeout(() => {
-        reject(
-          console.log({
-            success: false,
-            message: 'データの取得に失敗しました。',
-          })
-        );
+        reject({
+          success: false,
+          message: 'データの取得に失敗しました。',
+        });
       }, 1000);
     }
   });
