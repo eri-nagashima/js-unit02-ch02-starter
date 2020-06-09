@@ -20,10 +20,18 @@ function handleClick(e) {
 
   getData()
     .then((result) => {
-      mainEl.innerHTML = JSON.stringify(result);
+      mainEl.innerHTML = `
+      <p>ID：${result.id}</p>
+      <p>宿名：${result.propertyName}</p>
+      <p>宿タイプ：${result.propertyType}</p>
+      <p>キャンセルポリシー：${result.cancelPolicy}</p>
+      <p>部屋No.：${result.roomNum}</p>
+      <p>風呂場No.：${result.bathroomNum}</p>
+      <p>価格：${result.priceInDollars}US$</p>
+      <p>ホスト：${result.host.firstName}</p>`;
     })
     .catch((err) => {
-      mainEl.innerHTML = err;
+      mainEl.innerHTML = `<p>${err}</p>`;
     });
 }
 
@@ -31,14 +39,12 @@ function getData() {
   return fetchData()
     .then((result) => {
       if (result.success === true) {
-        const resultData = Promise.resolve(result.propertyData);
-        return resultData;
+        return Promise.resolve(result.propertyData);
       }
     })
     .catch((err) => {
       if (err.success === false) {
-        const errorMessage = Promise.reject(err.message);
-        return errorMessage;
+        return Promise.reject(err.message);
       }
     });
 }
@@ -46,9 +52,9 @@ function getData() {
 function fetchData() {
   const chances = _.random(1, 5);
 
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      if (chances > 1) {
+      if (chances <= 4) {
         resolve({ success: true, propertyData: propertyData });
       } else {
         reject({ success: false, message: 'データの取得に失敗しました。' });
