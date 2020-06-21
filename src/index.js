@@ -18,7 +18,7 @@ function handleClick(e) {
   e.preventDefault();
   const mainEl = document.getElementById('main');
 
-  getData()
+  return getData()
     .then((result) => {
       mainEl.innerHTML = `
       <p>ID：${result.id}</p>
@@ -31,7 +31,7 @@ function handleClick(e) {
       <p>ホスト：${result.host.firstName}</p>`;
     })
     .catch((err) => {
-      mainEl.innerHTML = `<p>${err}</p>`;
+      mainEl.innerHTML = `<p>${err.message}</p>`;
     });
 }
 
@@ -44,7 +44,7 @@ function getData() {
     })
     .catch((err) => {
       if (err.success === false) {
-        return Promise.reject(err.message);
+        return Promise.reject(err);
       }
     });
 }
