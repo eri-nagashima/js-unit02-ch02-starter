@@ -36,17 +36,13 @@ function handleClick(e) {
 }
 
 function getData() {
-  return fetchData()
-    .then((result) => {
-      if (result.success === true) {
-        return Promise.resolve(result.propertyData);
-      }
-    })
-    .catch((err) => {
-      if (err.success === false) {
-        return Promise.reject(err);
-      }
-    });
+  return fetchData().then((result) => {
+    if (result.success) {
+      return Promise.resolve(result.propertyData);
+    } else {
+      return Promise.reject(result.message);
+    }
+  });
 }
 
 function fetchData() {
